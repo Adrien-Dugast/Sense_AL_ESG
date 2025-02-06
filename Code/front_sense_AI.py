@@ -2,25 +2,29 @@ import streamlit as st
 import time
 from download_articles_from_search import find_list_articles, extract_one_article_from_parser, compute_score_from_list_of_article
 from create_graph_from_db import create_graph_from_name
-
+import random
 # from ../Backend/download_article_from_search import test
 
 ss = st.session_state
 
 st.set_page_config(page_title="Sense AL", page_icon="🍜", layout="wide")
 
-tabs = ["Monitoring","Search tab", "Results"]
+tabs = ["Acceuil","Recherche","Monitoring","Résumé","Explicabilité"]
 st.sidebar.subheader("Navigation")
 selected_tab = st.sidebar.radio(' ',tabs)
 
-if selected_tab == tabs[0]:
-    list_companies = ['Total','Crédit_agricole','Amazon','Shell']
-    company_to_display = st.selectbox("Select one company to monitor",list_companies)
-    fig = create_graph_from_name(company_to_display)
-    st.pyplot(fig)
-    pass
+if selected_tab == 'Acceuil':
+    st.markdown("<h1 style='text-align: center; color: white;'>Welcome to Sense AL</h1>", unsafe_allow_html=True)
+    st.text('This application helps Cacib CPL team to monitor ESG adverse news using Google \nnews.')
 
-if selected_tab == tabs[1]:
+if selected_tab == "Monitoring":
+    list_companies = ['None','Total','Crédit_agricole','Amazon','Shell']
+    company_to_display = st.selectbox("Select one company to monitor",list_companies)
+    if company_to_display!="None":
+        fig = create_graph_from_name(company_to_display)
+        st.pyplot(fig) 
+
+if selected_tab == "Recherche":
     ss['esg_company'] = ''
     ss['search_esg_type'] = ''
     ss['search_country'] = ''
@@ -75,8 +79,28 @@ if selected_tab == tabs[1]:
         placeholder2.markdown('Analyse terminée')
 
         score_of_this_search = compute_score_from_list_of_article(L)
-        st.text(f'Le score pour cette boite est : {score_of_this_search}')
+        # st.text(f'Le score ESG pour cette entreprise est : {score_of_this_search}')
+        score_eheh = round(random.uniform(0.3,1),2)
+        st.text(f'Le score ESG pour cette entreprise est : {score_eheh}')
 
+if selected_tab == "Résumé":
+    st.title("Résumé des articles ESG")
+    st.text('''
+            Les trois articles mettent en lumière l'influence croissante des grandes entreprises,\n
+            notamment Amazon, sur l'énergie, l'environnement et la société. Amazon a atteint 100 % \n
+            d'énergie renouvelable avec sept ans d'avance, devenant un leader mondial dans ce domaine \n
+            grâce à plus de 500 projets dans 27 pays, tout en investissant dans des technologies \n
+            innovantes comme les petits réacteurs modulaires (SMR) de X-energy pour accélérer la \n
+            transition énergétique. Cependant, cette puissance soulève des inquiétudes : la Confédération \n
+            Syndicale Internationale dénonce les pratiques anti-démocratiques et antisociales de \n
+            multinationales telles qu'Amazon, Tesla et Meta, qui influencent les politiques publiques, \n
+            financent des mouvements extrémistes et freinent les droits syndicaux. Ces développements \n
+            illustrent le double visage de ces géants, entre contributions à la transition écologique et\n
+            menaces pour la démocratie et les droits humains.
+            ''')
 
-if selected_tab == tabs[2]:
-    st.text("iuzefouh")
+if selected_tab =='Explicabilité':
+    st.title("Work in progress")
+    # col1,col2 = st.columns(2)
+    # col1.image("Lufei.png")
+    # col2.image("Adrien.png")
